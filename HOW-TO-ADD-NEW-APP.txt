@@ -1,0 +1,30 @@
+NOTUN APP/GAME ADD KORAR NIYOM
+==============================
+1. apps/ folder er moddhe notun folder banao, jemon:  apps/my-new-game/
+2. Folder e 4 ta file rakho:
+     banner.jpg      (16:9, jemon 1376x768)
+     icon.png        (square, 512x512)
+     details.txt     (app er details, format niche)
+     MyGame.apk      (apk file)
+3. apps.json er last e ekta notun block add koro (age er block er pore comma dite bhulo na):
+
+  {
+    "id": "my-new-game",
+    "name": "My New Game",
+    "tagline": "ek line er short description",
+    "folder": "apps/my-new-game",
+    "banner": "banner.jpg",
+    "icon": "icon.png",
+    "apk": "MyGame.apk",
+    "downloadName": "My New Game.apk"
+  }
+
+4. Commit koro. 1-2 minute por store e game ta dekha jabe.
+
+details.txt FORMAT (--- diye 4 ta part alada):
+  Part 1: Key: Value lines (Version, Size, Android, Price, Category)
+  Part 2: description (ek line = ek paragraph)
+  Part 3: features ("- " diye shuru)
+  Part 4: install steps (ek line = ek step). Khali rakhle default step dekhabe.
+
+NOTE: file er naam e space/bangla rakhbe na. GitHub e ekta file max 100 MB.

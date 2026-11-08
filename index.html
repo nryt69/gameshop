@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>No Rules YT – Free Android Games</title>
+<meta name="description" content="No Rules YT er free Android game download store. BD Tesla Slapper, Badmantion ar aro.">
+<meta name="theme-color" content="#00652e">
+<meta property="og:title" content="No Rules YT – Game Shop">
+<meta property="og:description" content="Free desi Android games. APK download.">
+<meta property="og:image" content="assets/logo.png">
+<link rel="icon" href="assets/logo-192.png">
+<link rel="apple-touch-icon" href="assets/logo-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="bar"></div>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <h1>Desi games, free download</h1>
+      <p>Bangladeshi vibe er Android game, No Rules YT er shathe. APK nao, install koro, khelo.</p>
+      <div class="actions" style="display:flex;gap:12px;flex-wrap:wrap">
+        <a class="btn btn-main" href="#games">Browse games</a>
+        <a class="btn btn-ghost" href="#owner">Owner &amp; social</a>
+      </div>
+    </div>
+    <div class="hero-logo"><img src="assets/logo.png" alt="No Rules YT logo: gamer with a controller in front of a red circle" width="720" height="720"></div>
+  </div>
+</header>
+<div class="edge" aria-hidden="true"></div>
+
+<main class="wrap">
+  <section class="block" id="games">
+    <div class="sec-head"><h2>All games</h2><span id="count"></span></div>
+    <div class="games" id="list"><p style="color:var(--muted)">Loading...</p></div>
+  </section>
+</main>
+
+<div id="foot"></div>
+<script src="assets/shell.js"></script>
+<script>
+renderBar(); renderFooter();
+loadApps().then(apps=>{
+  document.getElementById("count").textContent = apps.length + (apps.length===1?" game":" games");
+  document.getElementById("list").innerHTML = apps.map(gameCard).join("") +
+    '<div class="soon"><div><strong>Aro asche</strong>Notun game ar app shighroi ekhane add hobe.</div></div>';
+}).catch(()=>{
+  document.getElementById("list").innerHTML = '<p style="color:var(--muted)">Games load hoyni. GitHub Pages ba local server theke page ta khulo (file:// e fetch kaj kore na).</p>';
+});
+</script>
+</body>
+</html>

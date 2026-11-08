@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Download – No Rules YT</title>
+<meta name="description" content="Free Android game download by No Rules YT.">
+<meta name="theme-color" content="#07120c">
+<link rel="icon" href="assets/logo-192.png">
+<link rel="apple-touch-icon" href="assets/logo-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div id="bar"></div>
+<main class="wrap" id="page"><p style="padding:60px 0;color:var(--muted)">Loading...</p></main>
+<div id="foot"></div>
+<script src="assets/shell.js"></script>
+<script>
+renderBar(); renderFooter();
+const id = new URLSearchParams(location.search).get("id");
+loadApps().then(apps=>{
+  const a = apps.find(x=>x.id===id);
+  const page = document.getElementById("page");
+  if(!a){
+    page.innerHTML = '<div class="empty"><h1>Game pawa jayni</h1><p style="color:var(--muted);margin-bottom:20px">Link ta thik na ba game ta soriye fela hoyeche.</p><a class="btn btn-main" href="index.html">Sob game dekho</a></div>';
+    document.title = "Not found – No Rules YT"; return;
+  }
+  const d = a.details;
+  document.title = a.name + " – Download | No Rules YT";
+  document.querySelector('meta[name="description"]').content = (d.desc[0]||a.name).slice(0,150);
+  const others = apps.filter(x=>x.id!==a.id);
+  const chips = ["Version","Size","Price"].map(k=>specChip(a,k)).join("");
+  page.innerHTML = `
+  <p class="crumb"><a href="index.html">All games</a> / ${esc(a.name)}</p>
+  <div class="detail">
+    <div class="shot"><img src="${a.path(a.banner)}" alt="${esc(a.name)} banner"></div>
+    <div class="info">
+      <div class="top">${a.icon?`<img src="${a.path(a.icon)}" alt="" width="76" height="76">`:""}
+        <div><h1>${esc(a.name)}</h1><p class="tl">${esc(a.tagline||"")}</p></div></div>
+      <div class="chips">${chips}</div>
+      <a class="btn btn-main" href="${a.path(a.apk)}" download="${esc(a.downloadName||a.apk)}">${DL_ICON}Download APK</a>
+    </div>
+  </div>
+  <div class="grid">
+    <section class="card about"><h2>About the game</h2>${d.desc.map(p=>`<p>${esc(p)}</p>`).join("")}</section>
+    <div class="stack">
+      <section class="card"><h2>App info</h2><div class="specs">${d.specs.map(([k,v])=>`<div class="spec"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join("")}</div></section>
+      <section class="card"><h2>Features</h2><ul class="features">${d.feats.map(f=>`<li>${esc(f)}</li>`).join("")}</ul></section>
+    </div>
+  </div>
+  <section class="card" style="margin-top:22px"><h2>How to install</h2>
+    <ol class="steps">${d.steps.map(s=>`<li><span>${esc(s)}</span></li>`).join("")}</ol>
+    <p class="note">Play Protect warning dekhale "Install anyway" chaple hobe. Eta amader nijer banano APK, Play Store er baire theke download hocche tai ei warning ashe.</p>
+  </section>
+  ${others.length?`<section class="block"><div class="sec-head"><h2>More games</h2></div><div class="games">${others.map(gameCard).join("")}</div></section>`:""}`;
+}).catch(()=>{
+  document.getElementById("page").innerHTML = '<p style="padding:60px 0;color:var(--muted)">Page load hoyni. GitHub Pages ba local server theke khulo.</p>';
+});
+</script>
+</body>
+</html>

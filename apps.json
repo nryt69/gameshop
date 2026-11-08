@@ -1,0 +1,22 @@
+[
+  {
+    "id": "bd-tesla-slapper",
+    "name": "BD Tesla Slapper",
+    "tagline": "same vibe a similar",
+    "folder": "apps/bd-tesla-slapper",
+    "banner": "banner.jpg",
+    "icon": "icon.png",
+    "apk": "BD-Tesla-Slapper.apk",
+    "downloadName": "BD Tesla Slapper.apk"
+  },
+  {
+    "id": "badmantion",
+    "name": "Badmantion",
+    "tagline": "Desi winter badminton",
+    "folder": "apps/badmantion",
+    "banner": "banner.jpg",
+    "icon": "icon.png",
+    "apk": "Badmantion-V-1.0.1.apk",
+    "downloadName": "Badmantion V 1.0.1.apk"
+  }
+]
