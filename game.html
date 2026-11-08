@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Download – No Rules YT</title>
 <meta name="description" content="Free Android game download by No Rules YT.">
-<meta name="theme-color" content="#07120c">
+<meta name="theme-color" content="#050c08">
 <link rel="icon" href="assets/logo-192.png">
 <link rel="apple-touch-icon" href="assets/logo-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
 </head>
 <body>
 <div id="bar"></div>
-<main class="wrap" id="page"><p style="padding:60px 0;color:var(--muted)">Loading...</p></main>
+<main id="page"><div class="wrap" style="padding:60px 0"><div class="sk" style="height:220px"></div></div></main>
 <div id="foot"></div>
 <script src="assets/shell.js"></script>
 <script>
@@ -23,39 +23,66 @@ loadApps().then(apps=>{
   const a = apps.find(x=>x.id===id);
   const page = document.getElementById("page");
   if(!a){
-    page.innerHTML = '<div class="empty"><h1>Game pawa jayni</h1><p style="color:var(--muted);margin-bottom:20px">Link ta thik na ba game ta soriye fela hoyeche.</p><a class="btn btn-main" href="index.html">Sob game dekho</a></div>';
-    document.title = "Not found – No Rules YT"; return;
+    page.innerHTML='<div class="wrap empty"><h1>Game pawa jayni</h1><p style="color:var(--muted);margin-bottom:20px">Link ta thik na ba game ta soriye fela hoyeche.</p><a class="btn btn-main btn-lg" href="index.html">Sob game dekho</a></div>';
+    document.title="Not found – No Rules YT"; return;
   }
-  const d = a.details;
-  document.title = a.name + " – Download | No Rules YT";
-  document.querySelector('meta[name="description"]').content = (d.desc[0]||a.name).slice(0,150);
-  const others = apps.filter(x=>x.id!==a.id);
-  const chips = ["Version","Size","Price"].map(k=>specChip(a,k)).join("");
-  page.innerHTML = `
-  <p class="crumb"><a href="index.html">All games</a> / ${esc(a.name)}</p>
-  <div class="detail">
-    <div class="shot"><img src="${a.path(a.banner)}" alt="${esc(a.name)} banner"></div>
-    <div class="info">
-      <div class="top">${a.icon?`<img src="${a.path(a.icon)}" alt="" width="76" height="76">`:""}
-        <div><h1>${esc(a.name)}</h1><p class="tl">${esc(a.tagline||"")}</p></div></div>
-      <div class="chips">${chips}</div>
-      <a class="btn btn-main" href="${a.path(a.apk)}" download="${esc(a.downloadName||a.apk)}">${DL_ICON}Download APK</a>
+  const d=a.details, others=apps.filter(x=>x.id!==a.id);
+  document.title=a.name+" – Download | No Rules YT";
+  document.querySelector('meta[name="description"]').content=(d.desc[0]||a.name).slice(0,150);
+  const stats=[["Size",spec(a,"Size")],["Android",spec(a,"Android")],["Price",spec(a,"Price")],["Category",spec(a,"Category")],["Version",spec(a,"Version")]].filter(s=>s[1]);
+  const dl=`href="${a.path(a.apk)}" download="${esc(a.downloadName||a.apk)}"`;
+  page.innerHTML=`
+  <section class="dhero" data-id="${esc(a.id)}" style="--bd:url('${a.path(a.banner)}')"><div class="wrap">
+    <p class="crumb"><a href="index.html">All games</a> / ${esc(a.name)}</p>
+    <div class="dtop reveal">
+      ${a.icon?`<img class="icon" src="${a.path(a.icon)}" alt="" width="128" height="128">`:""}
+      <div class="name">
+        <h1>${esc(a.name)}</h1>
+        <a class="dev" href="index.html#owner">No Rules YT</a>
+        <p class="tl">${esc(a.tagline||"")}</p>
+      </div>
     </div>
-  </div>
-  <div class="grid">
-    <section class="card about"><h2>About the game</h2>${d.desc.map(p=>`<p>${esc(p)}</p>`).join("")}</section>
-    <div class="stack">
-      <section class="card"><h2>App info</h2><div class="specs">${d.specs.map(([k,v])=>`<div class="spec"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join("")}</div></section>
-      <section class="card"><h2>Features</h2><ul class="features">${d.feats.map(f=>`<li>${esc(f)}</li>`).join("")}</ul></section>
+    <div class="dactions reveal" style="--i:1">
+      <a id="main-dl" class="btn btn-main btn-lg" data-dl ${dl}>${IC.dl}Download APK</a>
+      <button class="btn btn-ghost btn-lg" type="button" onclick="shareApp('${esc(a.name).replace(/'/g,"")}')">${IC.share}Share</button>
     </div>
+    <div class="stats reveal" style="--i:2">${stats.map(([k,v])=>`<div class="stat"><strong>${esc(v)}</strong><span>${esc(k)}</span></div>`).join("")}</div>
+    <div class="preview reveal" style="--i:3"><img src="${a.path(a.banner)}" alt="${esc(a.name)} preview"></div>
+  </div></section>
+
+  <div class="wrap">
+    <div class="grid">
+      <section class="card about reveal"><h2>About the game</h2>${d.desc.map(p=>`<p>${esc(p)}</p>`).join("")}</section>
+      <div class="stack">
+        <section class="card reveal"><h2>App info</h2><div class="specs">${d.specs.map(([k,v])=>`<div class="spec"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join("")}</div></section>
+        <section class="card reveal"><h2>Features</h2><ul class="features">${d.feats.map(f=>`<li>${esc(f)}</li>`).join("")}</ul></section>
+      </div>
+    </div>
+    <section class="card reveal" style="margin-top:22px"><h2>How to install</h2>
+      <ol class="steps">${d.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
+      <p class="note">Play Protect warning dekhale "Install anyway" chaple hobe. Eta amader nijer banano APK, Play Store er baire theke download hocche tai ei warning ashe.</p>
+    </section>
+    ${others.length?`<section class="block"><div class="sec-head"><h2>More games</h2></div><div class="games" id="more">${others.map((x,i)=>gameCard(x,i)).join("")}</div></section>`:""}
   </div>
-  <section class="card" style="margin-top:22px"><h2>How to install</h2>
-    <ol class="steps">${d.steps.map(s=>`<li><span>${esc(s)}</span></li>`).join("")}</ol>
-    <p class="note">Play Protect warning dekhale "Install anyway" chaple hobe. Eta amader nijer banano APK, Play Store er baire theke download hocche tai ei warning ashe.</p>
-  </section>
-  ${others.length?`<section class="block"><div class="sec-head"><h2>More games</h2></div><div class="games">${others.map(gameCard).join("")}</div></section>`:""}`;
+
+  <div class="dock" id="dock" aria-hidden="true">
+    ${a.icon?`<img src="${a.path(a.icon)}" alt="">`:""}
+    <div><strong>${esc(a.name)}</strong><small>${esc([spec(a,"Size"),spec(a,"Price")].filter(Boolean).join(" · "))}</small></div>
+    <a class="btn btn-main" data-dl tabindex="-1" ${dl}>${IC.dl}Download</a>
+  </div>`;
+  observeReveal(page);
+  applyAccents(apps,document);
+  const dock=document.getElementById("dock");
+  const main=document.getElementById("main-dl");
+  if("IntersectionObserver" in window){
+    new IntersectionObserver(([en])=>{
+      const show=!en.isIntersecting && en.boundingClientRect.top<0;
+      dock.classList.toggle("show",show); dock.setAttribute("aria-hidden",!show);
+      dock.querySelector(".btn").tabIndex=show?0:-1;
+    },{threshold:0}).observe(main);
+  }
 }).catch(()=>{
-  document.getElementById("page").innerHTML = '<p style="padding:60px 0;color:var(--muted)">Page load hoyni. GitHub Pages ba local server theke khulo.</p>';
+  document.getElementById("page").innerHTML='<div class="wrap empty"><p style="color:var(--muted)">Page load hoyni. GitHub Pages ba local server theke khulo.</p></div>';
 });
 </script>
 </body>

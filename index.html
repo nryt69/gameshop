@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>No Rules YT – Free Android Games</title>
 <meta name="description" content="No Rules YT er free Android game download store. BD Tesla Slapper, Badmantion ar aro.">
-<meta name="theme-color" content="#00652e">
+<meta name="theme-color" content="#050c08">
 <meta property="og:title" content="No Rules YT – Game Shop">
 <meta property="og:description" content="Free desi Android games. APK download.">
 <meta property="og:image" content="assets/logo.png">
@@ -17,25 +17,31 @@
 <body>
 <div id="bar"></div>
 
-<header class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <h1>Desi games, free download</h1>
-      <p>Bangladeshi vibe er Android game, No Rules YT er shathe. APK nao, install koro, khelo.</p>
-      <div class="actions" style="display:flex;gap:12px;flex-wrap:wrap">
-        <a class="btn btn-main" href="#games">Browse games</a>
-        <a class="btn btn-ghost" href="#owner">Owner &amp; social</a>
-      </div>
-    </div>
-    <div class="hero-logo"><img src="assets/logo.png" alt="No Rules YT logo: gamer with a controller in front of a red circle" width="720" height="720"></div>
-  </div>
-</header>
-<div class="edge" aria-hidden="true"></div>
-
 <main class="wrap">
+  <header class="hero">
+    <div class="hero-grid">
+      <div>
+        <h1>Desi games, free download</h1>
+        <p>Bangladeshi vibe er Android game, No Rules YT er shathe. APK nao, install koro, khelo.</p>
+        <div class="actions">
+          <a class="btn btn-main btn-lg" href="#games">Browse games</a>
+          <a class="btn btn-ghost btn-lg" href="#owner">Owner &amp; social</a>
+        </div>
+        <div class="pills" id="pills"></div>
+      </div>
+      <div class="hero-logo"><img src="assets/logo.png" alt="No Rules YT logo: gamer with a controller in front of a red circle" width="720" height="720"></div>
+    </div>
+  </header>
+
+  <section class="block" id="featured" hidden></section>
+
   <section class="block" id="games">
-    <div class="sec-head"><h2>All games</h2><span id="count"></span></div>
-    <div class="games" id="list"><p style="color:var(--muted)">Loading...</p></div>
+    <div class="sec-head"><div><h2>All games</h2><p id="count"></p></div></div>
+    <div class="tools">
+      <div class="cats" id="cats" role="group" aria-label="Category filter"></div>
+      <label class="search"><span hidden>Search games</span><input id="q" type="search" placeholder="Game khujo..." autocomplete="off"></label>
+    </div>
+    <div class="games" id="list"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
   </section>
 </main>
 
@@ -43,12 +49,53 @@
 <script src="assets/shell.js"></script>
 <script>
 renderBar(); renderFooter();
+document.querySelector(".search").insertAdjacentHTML("afterbegin", IC.search);
+let APPS=[], cat="All", q="";
+
+function renderFeatured(a){
+  const s=document.getElementById("featured");
+  s.hidden=false;
+  s.innerHTML=`<article class="feat reveal" data-id="${esc(a.id)}">
+    <a class="pic" href="${a.url}" aria-label="${esc(a.name)}"><img src="${a.path(a.banner)}" alt="${esc(a.name)} banner"></a>
+    <div class="txt">
+      <span class="badge">Featured</span>
+      <div class="id">${a.icon?`<img src="${a.path(a.icon)}" alt="" width="72" height="72">`:""}<div><h3>${esc(a.name)}</h3><p class="tl">${esc(a.tagline||"")}</p></div></div>
+      <p class="ds">${esc(a.details.desc[0]||"")}</p>
+      <div class="pills" style="margin:0">${[spec(a,"Version"),spec(a,"Size"),spec(a,"Price")].filter(Boolean).map(v=>`<span class="pill">${esc(v)}</span>`).join("")}</div>
+      <div class="row">
+        <a class="btn btn-main btn-lg" data-dl href="${a.path(a.apk)}" download="${esc(a.downloadName||a.apk)}">${IC.dl}Download</a>
+        <a class="btn btn-ghost btn-lg" href="${a.url}">Details</a>
+      </div>
+    </div></article>`;
+  observeReveal(s);
+}
+function renderCats(){
+  const cats=["All",...new Set(APPS.map(a=>spec(a,"Category")).filter(Boolean))];
+  document.getElementById("cats").innerHTML=cats.map(c=>`<button class="cat" type="button" aria-pressed="${c===cat}" data-c="${esc(c)}">${esc(c)}</button>`).join("");
+}
+function renderList(){
+  const list=document.getElementById("list");
+  const f=APPS.filter(a=>(cat==="All"||spec(a,"Category")===cat)&&(a.name+" "+(a.tagline||"")+" "+spec(a,"Category")).toLowerCase().includes(q));
+  document.getElementById("count").textContent=f.length+(f.length===1?" game":" games");
+  let html=f.map((a,i)=>gameCard(a,i)).join("");
+  if(!f.length) html='<p class="nores">Kono game pawa jayni. Onno kichu likhe khujo.</p>';
+  else if(cat==="All"&&!q) html+='<div class="cell reveal" style="--i:'+f.length+'"><div class="soon"><div><div class="plus">+</div><strong>Aro asche</strong>Notun game ar app shighroi ekhane add hobe.</div></div></div>';
+  list.innerHTML=html; observeReveal(list); applyAccents(f,list);
+}
+document.getElementById("cats").addEventListener("click",e=>{
+  const b=e.target.closest(".cat"); if(!b) return;
+  cat=b.dataset.c; renderCats(); renderList();
+});
+document.getElementById("q").addEventListener("input",e=>{q=e.target.value.trim().toLowerCase(); renderList();});
+
 loadApps().then(apps=>{
-  document.getElementById("count").textContent = apps.length + (apps.length===1?" game":" games");
-  document.getElementById("list").innerHTML = apps.map(gameCard).join("") +
-    '<div class="soon"><div><strong>Aro asche</strong>Notun game ar app shighroi ekhane add hobe.</div></div>';
+  APPS=apps;
+  document.getElementById("pills").innerHTML=[apps.length+(apps.length===1?" game":" games"),"Free to play","Direct APK download"].map(t=>`<span class="pill">${t}</span>`).join("");
+  const feat=apps.find(a=>a.featured)||apps[0];
+  if(feat){renderFeatured(feat); applyAccents([feat],document.getElementById("featured"));}
+  renderCats(); renderList();
 }).catch(()=>{
-  document.getElementById("list").innerHTML = '<p style="color:var(--muted)">Games load hoyni. GitHub Pages ba local server theke page ta khulo (file:// e fetch kaj kore na).</p>';
+  document.getElementById("list").innerHTML='<p class="nores">Games load hoyni. GitHub Pages ba local server theke page ta khulo (file:// e fetch kaj kore na).</p>';
 });
 </script>
 </body>
